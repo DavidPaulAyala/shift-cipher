@@ -1,0 +1,5 @@
+name = Shift Cipher
+description = A module that 
+package = My Modules
+core = 7.x
+files[] = shift_cipher.module

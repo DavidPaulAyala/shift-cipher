@@ -1,0 +1,66 @@
+<?php
+function shift_cipher_menu() {
+    $items = array();
+    $items['shift_cipher'] = array(
+            'title' => 'Shift Cipher',
+            'type' => MENU_NORMAL_ITEM,
+            'access callback' => TRUE,
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('shift_cipher_form'),
+        );
+        $items['shift_cipher_success_page'] = array(
+                'title' => 'Shift Cipher Results',
+                'type' => MENU_CALLBACK,
+                'access callback' => TRUE,
+                'page callback' => 'display_cipher_results',
+            );
+        return $items;
+    }
+
+function shift_cipher_form_submit($form, &$form_state) {
+    $shift_value = $form_state['values']['shift_value'];
+    $shift_direction = $form_state['values']['shift_direction'];
+    $phrase = $form_state['values']['phrase'];
+
+}
+
+function shift_cipher_form_validate($form, &$form_state) {
+    $shift_value = $form_state['values']['shift_value'];
+    $shift_direction = $form_state['values']['shift_direction'];
+    $phrase = $form_state['values']['phrase'];
+
+}
+
+function display_cipher_results() {
+    $results = $_SESSION['cipher_results'];
+
+    return $results;
+}
+
+function shift_cipher_form() {
+    $form = array();
+    $form['shift_value'] = array(
+            '#title' => 'Shift Value',
+            '#type' => 'textfield',
+            '#description' => t('Enter a number between 1 and 25'),
+            '#required' => TRUE,
+            '#element_validate' => array('element_validate_integer_positive'),
+        );
+    $form['shift_direction'] = array(
+            '#title' => 'Shift Direction',
+            '#type' => 'textfield',
+            '#description' => t('Would you like to shift left or right?'),
+            '#required' => TRUE,
+        );
+    $form['phrase'] = array(
+            '#title' => 'Phrase',
+            '#type' => 'textfield',
+            '#description' => t('Enter a phrase you would like to convert.'),
+            '#required' => TRUE,
+        );
+    $form['submit'] = array(
+            '#type' => 'submit',
+            '#value' => 'Create Cipher',
+        );
+    return $form;
+}

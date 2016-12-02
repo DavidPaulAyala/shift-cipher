@@ -20,6 +20,8 @@ function shift_cipher_menu() {
 function shift_cipher_form_submit($form, &$form_state) {
     $shift_value = $form_state['values']['shift_value'];
     $shift_direction = $form_state['values']['shift_direction'];
+    $phrase = $form_state['values']['phrase'];
+    $_SESSION['original_phrase'] = $phrase;
     $phrase = str_split(strtolower($form_state['values']['phrase']));
 
     $results = array();
@@ -93,6 +95,8 @@ function shift_cipher_form_validate($form, &$form_state) {
 function display_cipher_results() {
     $results = $_SESSION['cipher_results'];
     $results = implode("", $results);
+    $phrase = $_SESSION['original_phrase'];
+    $results = ("<h2>Your orginal phrase, ". '<strong>' . $phrase . '</strong>' .', has been converted into ' . '<strong>' . $results . '</strong>' . '</h2>');
     return $results;
 }
 
@@ -101,9 +105,9 @@ function shift_cipher_form() {
     $form['shift_value'] = array(
             '#title' => 'Shift Value',
             '#type' => 'textfield',
-            '#description' => t('Please enter a number.'),
+            '#description' => t('Please enter a number between 1 and 25.'),
             '#required' => TRUE,
-            '#element_validate' => array('element_validate_integer_positive'),
+            '#element_validate' => array('element_validate_reasonable_range'),
         );
     $form['shift_direction'] = array(
             '#title' => 'Shift Direction',
@@ -126,6 +130,12 @@ function shift_cipher_form() {
     return $form;
 }
 
+function element_validate_reasonable_range($element) {
+    if ($element['#value'] > 25 || $element['#value'] < 1) {
+        form_error($element, t('Again, the instructions clearly ask for a number between 1 and 25!😤'));
+    }
+}
+
 function element_validate_direction($element) {
     if (($element['#value'] != 'right') && ($element['#value'] != 'left')) {
         form_error($element, t('Please enter right or left for direction'));
@@ -134,6 +144,6 @@ function element_validate_direction($element) {
 
 function element_validate_special_char($element) {
     if(preg_match("/[^a-zA-Z.?!', ]/", $element['#value'])) {
-        form_error($element, t("Please don't use special characters!!!"));
+        form_error($element, t("Please don't use numbers or special characters!!!"));
     }
 }

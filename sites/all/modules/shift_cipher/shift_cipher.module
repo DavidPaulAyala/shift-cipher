@@ -22,6 +22,8 @@ function shift_cipher_form_submit($form, &$form_state) {
     $shift_direction = $form_state['values']['shift_direction'];
     $phrase = $form_state['values']['phrase'];
 
+    $form_state['redirect'] = 'shift_cipher_success_page';
+
 }
 
 function shift_cipher_form_validate($form, &$form_state) {
@@ -42,7 +44,7 @@ function shift_cipher_form() {
     $form['shift_value'] = array(
             '#title' => 'Shift Value',
             '#type' => 'textfield',
-            '#description' => t('Enter a number between 1 and 25'),
+            '#description' => t('Please enter a number.'),
             '#required' => TRUE,
             '#element_validate' => array('element_validate_integer_positive'),
         );
@@ -51,6 +53,7 @@ function shift_cipher_form() {
             '#type' => 'textfield',
             '#description' => t('Would you like to shift left or right?'),
             '#required' => TRUE,
+            '#element_validate' => array('element_validate_direction'),
         );
     $form['phrase'] = array(
             '#title' => 'Phrase',
@@ -63,4 +66,10 @@ function shift_cipher_form() {
             '#value' => 'Create Cipher',
         );
     return $form;
+}
+
+function element_validate_direction($element) {
+    if (($element['#value'] != 'right') && ($element['#value'] != 'left')) {
+        form_error($element, t('Please enter right or left for direction'));
+    }
 }

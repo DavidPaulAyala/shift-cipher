@@ -60,12 +60,12 @@ function shift_cipher_form_submit($form, &$form_state) {
             $input = $alphabet[$input];
 
             if ($shift_direction == 'right') {
-                $offset = $input + $shift_value;
+                $offset = ($input + $shift_value) % 26;
                 if ($offset > 26) {
                     $offset = $offset - 26;
                 }
             } elseif ($shift_direction == 'left') {
-                $offset = $input - $shift_value;
+                $offset = ($input - $shift_value) % 26;
                     if ($offset < 0) {
                         $offset = $offset + 26;
                     }
@@ -107,7 +107,7 @@ function shift_cipher_form() {
             '#type' => 'textfield',
             '#description' => t('Please enter a number between 1 and 25.'),
             '#required' => TRUE,
-            '#element_validate' => array('element_validate_integer_positive', 'element_validate_reasonable_range'),
+            '#element_validate' => array('element_validate_integer_positive'),
         );
     $form['shift_direction'] = array(
             '#title' => 'Shift Direction',
@@ -128,12 +128,6 @@ function shift_cipher_form() {
             '#value' => 'Create Cipher',
         );
     return $form;
-}
-
-function element_validate_reasonable_range($element) {
-    if ($element['#value'] > 25 || $element['#value'] < 1) {
-        form_error($element, t('Again, the instructions clearly ask for a number between 1 and 25!😤'));
-    }
 }
 
 function element_validate_direction($element) {

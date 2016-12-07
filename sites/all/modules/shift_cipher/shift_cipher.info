@@ -1,5 +1,5 @@
 name = Shift Cipher
-description = A module that 
+description = A module that turns a phrase int a cryptogram given certain shift parameters
 package = My Modules
 core = 7.x
 files[] = shift_cipher.module

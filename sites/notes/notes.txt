@@ -1,0 +1,82 @@
+A Module is a folder of code that extends Drupal providing you with extra features and tools. For example e-commerce, image galleries, games.
+
+custom  modules could create new content types specific to your website such as recipes, movie reviews, personal messenger.
+
+Need	a .info and a .module file
+
+.module contains core of php code and defines the behavior of the module
+.info file tells drupal some info about the module
+required =
+name = Greeting
+description = Display greetings.
+package = Epicodus Examples
+core = 7.x
+files[] = greeting.module
+
+Hooks allow modules to define actions that are triggered by certain Drupal events(similar to JS event listeners to trigger functions on mouse clicks) A Hook creates a URL(uniform resource locater) that will run a function when visited. these functions are called hooks because they give modules an opportunity to hook into the websites path of execution at a particular time.
+
+hook_menu allows us to contribute menu items.
+
+PROJECT Discussion
+
+Create shift_cipher menu hook to place the module into the menu section
+
+	create an $items array with a key shift_cipher(shift_cipher becomes the url extension)
+	(below are attributes that page needs to load, we run a function called shift cipher form)
+		title = The menu item will be called Shift Cipher
+		type = It will be created/shown as a normal item within the menu section
+		access callback = defines permissions, TRUE allows access by anyone
+		page callback = existing drupal function(normally stores name of function to run in created URL)
+		page arguments =  tells drupal to run shift_cipher_form
+
+		this second key value pair creates the success page
+			gives it’s title
+			doesn’t create a menu item
+			accessible to everyone
+			stores name of the function to run
+
+Submit form
+	grabs values from form
+	stores original inputted phrase as session variable to use in output later
+	converts phrase input into a lowercase separated array of letters and characters
+	creates empty results array
+	creates key value alphabet array
+
+    for each instance of $phrase as $input
+	check to see if the characters in $phrase match a-zA-Z(this skips over punctuation and spaces)
+		if they do match, assign the letter a value as set up in my alphabet key value array
+
+	if $shift direction equals right
+		$offset = (inputted letter that is now a number + inputted shift value) MODULO 26;
+		this modulo is the new spot on the array that the letter will be changed to
+
+		for the rare cases where the new variable $offset created by modulo is greater than 26 		subtract 26 so that it can still find a spot on the array;
+
+	elseif $shift direction equals left
+		$offset = (inputted letter that is now a number - inputted shift value) MODULO 26;
+		this modulo is the new spot on the array that the letter will be changed to
+
+		for the rare cases where the new variable $offset created by modulo is less than 0		add 26 so that it can still find a spot on the array;
+
+	for each instance of alphabet as a key value
+	if the newly created offset value matches the assigned value of the letter
+	change the offset back from a number($offset) into a letter(the $key from the key value pair)
+
+	array_push(add values to end of array called $results, with the value of $offset);
+
+
+	else if it’s an allowable special character or space leave it alone and output what it is
+
+Display results
+	saves $results as session variable[cipher_results]
+	implodes the array back into a string
+	recalls original phrase session variable
+	out puts results as a sentence including original phrase
+
+creates form with three input fields and a submit button
+
+form validation functions
+
+only allows ‘left’ or ‘right’ to be input
+
+only allows a-zA-Z. ?!’, to be input for phrases

@@ -85,11 +85,15 @@ function shift_cipher_form_submit($form, &$form_state) {
     $form_state['redirect'] = 'shift_cipher_success_page';
 }
 
+function shiftcipher_include_spaces($input) {
+    return str_replace(' ', '&nbsp', $input);
+}
+
 function display_cipher_results() {
     $results = $_SESSION['cipher_results'];
     $results = implode("", $results);
     $phrase = $_SESSION['original_phrase'];
-    $results = ("<h2>Your orginal phrase, ". '<strong>' . $phrase . '</strong>' .', has been converted into ' . '<strong>' . $results . '</strong>' . '</h2>');
+    $results = ("<h2>Your orginal phrase, ". '<strong>' . shiftcipher_include_spaces($phrase) . '</strong>' .', has been converted into ' . '<strong>' . shiftcipher_include_spaces($results) . '</strong>' . '</h2>');
     return $results;
 }
 
